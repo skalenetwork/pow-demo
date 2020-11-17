@@ -2,20 +2,15 @@ const Web3 = require('web3');
 const mineGasForTransaction = require('./skale-miner').mineGasForTransaction
 require('dotenv').config();
 
-const SKALE_ENDPOINT = 'http://127.0.0.1:7055'
+web3 = new Web3(process.env.SKALE_ENDPOINT);
 
-web3 = new Web3(SKALE_ENDPOINT);
-let ownerKey = process.env.OWNER_KEY;
-let privateKey = process.env.PRIVATE_KEY;
-
-async function deploy(){
+async function deploy(ownerKey){
     let abi = JSON.parse('[{ "inputs": [ { "internalType": "uint256", "name": "x", "type": "uint256" } ], "name": "setA", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "name": "a", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "view", "type": "function" } ]')
     let bytecode = "0x608060405234801561001057600080fd5b50610129806100206000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c8063ee919d50146037578063f0fdf834146062575b600080fd5b606060048036036020811015604b57600080fd5b810190808035906020019092919050505060a5565b005b608b60048036036020811015607657600080fd5b810190808035906020019092919050505060d3565b604051808215151515815260200191505060405180910390f35b600160008083815260200190815260200160002060006101000a81548160ff02191690831515021790555050565b60006020528060005260406000206000915054906101000a900460ff168156fea26469706673582212209507c7b274ebb9fcddca5c090dc4c124f45548dfbcdcd574d4017a19fb4eb67b64736f6c63430006000033"
     const myContract = new web3.eth.Contract(abi);
 
-    let privateKey = ownerKey
-    let address = web3.eth.accounts.privateKeyToAccount(privateKey)['address'];
-    return send(myContract.deploy({data:bytecode}), privateKey, address);
+    let address = web3.eth.accounts.privateKeyToAccount(ownerKey)['address'];
+    return send(myContract.deploy({data:bytecode}), ownerKey, address);
 }
 
 
@@ -32,8 +27,8 @@ async function send(tr, pk, address) {
     return web3.eth.sendSignedTransaction(signed.rawTransaction)
 }
 
-async function test(ad){
-    let address = web3.eth.accounts.privateKeyToAccount(privateKey)['address'];
+async function test(testKey, ad){
+    let address = web3.eth.accounts.privateKeyToAccount(testKey)['address'];
     let nonce = await web3.eth.getTransactionCount(address)
     let tx =  {
         from: address,
@@ -46,9 +41,10 @@ async function test(ad){
     return web3.eth.sendSignedTransaction(signed.rawTransaction)
 }
 
-async function main() {
-    let addr = await deploy();
-    res = await test(addr.contractAddress);
+async function main(ownerKey, testKey) {
+    let addr = await deploy(ownerKey);
+    res = await test(testKey, addr.contractAddress);
+    console.log('Transaction is sent:', res);
 }
 
-main()
+main(process.env.OWNER_KEY, process.env.PRIVATE_KEY)
