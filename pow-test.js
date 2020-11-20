@@ -37,7 +37,7 @@ async function test(testKey, ad){
         nonce: nonce
     }
     await mineGasForTransaction(web3, tx);
-    let signed = await web3.eth.accounts.signTransaction(tx, privateKey)
+    let signed = await web3.eth.accounts.signTransaction(tx, testKey)
     return web3.eth.sendSignedTransaction(signed.rawTransaction)
 }
 
