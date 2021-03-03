@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+    <script src="pow.min.js"></script>
+    <script>
+        function run(){
+            let endpoint = document.getElementById("endpoint").value
+            let pk1 = document.getElementById("pk1").value
+            let pk2 = document.getElementById("pk2").value
+            pow(endpoint, pk1, pk2)
+        }
+    </script>
+</head>
+<body>
+    <input id="endpoint"/>
+    <input id="pk1"/>
+    <input id="pk2"/>
+    <button onclick="run()">Send transaction</button>
+</body>
+</html>

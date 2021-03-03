@@ -1,8 +1,5 @@
 const Web3 = require('web3');
-const mineGasForTransaction = require('./skale-miner').mineGasForTransaction
-require('dotenv').config();
-
-web3 = new Web3(process.env.SKALE_ENDPOINT);
+const mineGasForTransaction = require('./skale-miner').mineGasForTransaction;
 
 async function deploy(ownerKey){
     let abi = JSON.parse('[{ "inputs": [ { "internalType": "uint256", "name": "x", "type": "uint256" } ], "name": "setA", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "name": "a", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "view", "type": "function" } ]')
@@ -41,10 +38,12 @@ async function test(testKey, ad){
     return web3.eth.sendSignedTransaction(signed.rawTransaction)
 }
 
-async function main(ownerKey, testKey) {
+async function run(endpoint, ownerKey, testKey) {
+    console.log(endpoint, ownerKey, testKey);
+    web3 = new Web3(endpoint);
     let addr = await deploy(ownerKey);
     res = await test(testKey, addr.contractAddress);
     console.log('Transaction is sent:', res);
 }
 
-main(process.env.OWNER_KEY, process.env.PRIVATE_KEY)
+module.exports = run
