@@ -5,18 +5,25 @@
     <title>Demo</title>
     <script src="pow.min.js"></script>
     <script>
-        function run(){
+        async function deploy(){
             let endpoint = document.getElementById("endpoint").value
-            let pk1 = document.getElementById("pk1").value
-            let pk2 = document.getElementById("pk2").value
-            pow(endpoint, pk1, pk2)
+            let pk = document.getElementById("pk").value
+            window.contractAddress = await pow.deploy(endpoint, pk);
+            document.getElementById("contractAddress").innerHTML = window.contractAddress
+        }
+
+        function receiveFunds() {
+            pow.receiveFunds(window.contractAddress)
         }
     </script>
 </head>
 <body>
-    <input id="endpoint"/>
-    <input id="pk1"/>
-    <input id="pk2"/>
-    <button onclick="run()">Send transaction</button>
+<div>
+    <div> <label for="endpoint">Endpoint:</label> <input id="endpoint" /></div>
+    <div> <label for="pk">Owner Private Key:</label> <input id="pk" /></div>
+    <div> <label for="contractAddress">Contract address:</label><h3 id="contractAddress"></h3></div>
+    <button onclick="deploy()">Deploy payer contract</button>
+</div>
+    <button onclick="receiveFunds()">Receive funds</button>
 </body>
 </html>
