@@ -55,12 +55,16 @@ async function run(endpoint, ownerKey, testKey) {
     if (!window.ethereum.selectedAddress) {
         await window.ethereum.enable(); // <<< ask for permission
     }
-    userAccount = window.ethereum.selectedAddress;
-    console.log(userAccount);
     _web3 = new Web3(window.ethereum);
+    userAccount = window.ethereum.selectedAddress;
+    if (!window.sessionKey) {
+        window.sessionKey = _web3.eth.accounts.create().privateKey;
+    }
+    console.log(userAccount, window.sessionKey);
     ownerWeb3 = new Web3(endpoint);
     let addr = await deploy(ownerWeb3, ownerKey);
-    res = await testWallet(_web3, userAccount, addr.contractAddress);
+    // res = await testWallet(_web3, userAccount, addr.contractAddress);
+    res = await test(_web3, window.sessionKey, addr.contractAddress);
     console.log('Transaction is sent:', res);
 }
 
