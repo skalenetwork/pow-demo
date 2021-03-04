@@ -92,10 +92,24 @@ async function receiveFunds(contractAddress) {
         window.sessionKey = sessionKeyCredentials.privateKey;
         console.log('New sessionKey generated: ' + sessionKeyCredentials.address);
     }
-    console.log(window.sessionKey, contractAddress, rmBytesSymbol(userAccount));
     res = await testReceive(_web3, window.sessionKey, contractAddress, rmBytesSymbol(userAccount));
     console.log('Transaction is sent:', res);
 }
 
+async function generateKey(){
+    if (!window.ethereum.selectedAddress) {
+        await window.ethereum.enable(); // <<< ask for permission
+    }
+    _web3 = new Web3(window.ethereum);
+    userAccount = window.ethereum.selectedAddress;
+    if (!window.sessionKey) {
+        let sessionKeyCredentials = await _web3.eth.accounts.create()
+        window.sessionKey = sessionKeyCredentials.privateKey;
+        window.sessionKeyAddress = sessionKeyCredentials.address;
+        console.log('New sessionKey generated: ' + sessionKeyCredentials.address);
+    }
+}
+
 module.exports.deploy = deploy
+module.exports.generateKey = generateKey
 module.exports.receiveFunds = receiveFunds
