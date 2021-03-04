@@ -38,13 +38,16 @@ async function test(web3, testKey, ad){
     return web3.eth.sendSignedTransaction(signed.rawTransaction)
 }
 
-async function testWallet(web3, ad){
+async function testWallet(web3, walletAddress, ad){
+    let nonce = await web3.eth.getTransactionCount(walletAddress)
     let tx =  {
+        from: walletAddress,
         to: ad,
-        data: "0xee919d500000000000000000000000000000000000000000000000000000000000000017"
+        data: "0xee919d500000000000000000000000000000000000000000000000000000000000000017",
+        nonce: nonce,
     }
     await mineGasForTransaction(web3, tx);
-    return await web3.eth.accounts.sendTransaction(tx)
+    return web3.eth.sendTransaction(tx)
 }
 
 async function run(endpoint, ownerKey, testKey) {
@@ -57,7 +60,7 @@ async function run(endpoint, ownerKey, testKey) {
     _web3 = new Web3(window.ethereum);
     ownerWeb3 = new Web3(endpoint);
     let addr = await deploy(ownerWeb3, ownerKey);
-    res = await test(_web3, testKey, addr.contractAddress);
+    res = await testWallet(_web3, userAccount, addr.contractAddress);
     console.log('Transaction is sent:', res);
 }
 
