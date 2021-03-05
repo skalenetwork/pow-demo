@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+    <script src="pow.min.js"></script>
+    <link href="demo.css" rel="stylesheet">
+    <script>
+        async function deploy(){
+            let endpoint = document.getElementById("endpoint").value
+            let pk = document.getElementById("pk").value
+            window.contractAddress = await pow.deploy(endpoint, pk);
+            console.log(endpoint, pk)
+            document.getElementById("contractAddressLabel").innerHTML = window.contractAddress
+        }
+
+        async function receiveFunds() {
+            await pow.generateKey();
+            document.getElementById("sessionKeyLabel").innerHTML = window.sessionKeyAddress
+            pow.receiveFunds(window.contractAddress)
+        }
+    </script>
+</head>
+<body>
+<!--<div>-->
+<!--&lt;!&ndash;    <div> <label for="endpoint">Endpoint:</label> <input id="endpoint" /></div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div> <label for="pk">Owner Private Key:</label> <input id="pk" /></div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div> <label for="contractAddress">Contract address:</label><h3 id="contractAddress"></h3></div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <button onclick="deploy()">Deploy payer contract</button>&ndash;&gt;-->
+<!--</div>-->
+<!--    <button onclick="receiveFunds()">Receive funds</button>-->
+
+    <section>
+        <h2>Deploying payer contract</h2>
+        <p>
+            <label for="endpoint">
+                <span>Endpoint: </span>
+            </label>
+            <input id="endpoint">
+        </p>
+        <p>
+            <label for="pk">
+                <span>Owner PK: </span>
+            </label>
+            <input id="pk">
+        </p>
+        <p>
+            <label for="contractAddressLabel">
+                <span>Contract Address: </span>
+            </label>
+            <span id="contractAddressLabel"></span>
+        </p>
+    </section>
+    <section>
+        <p> <button onclick="deploy()">Deploy</button> </p>
+    </section>
+    <section>
+        <h2>Receiving funds</h2>
+        <p>
+            <label for="sessionKeyLabel">
+                <span>Session Key address: </span>
+            </label>
+            <span id="sessionKeyLabel"></span>
+        </p>
+    </section>
+    <section>
+        <p> <button onclick="receiveFunds()">Receive funds</button> </p>
+    </section>
+</body>
+</html>
