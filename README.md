@@ -17,6 +17,15 @@ Demo of sChain PoW script
     ```
 3. Run `npm run pow-test.js`
 
+# Benchmark
+
+The CPU time used for this PoW can be measured as:
+
+```
+time node benchmark.js    # 10 runs
+time node benchmark.js 15 # 15 runs
+```
+
 # Project structure
 
 - `skale-miner.js` - script for mining with PoW
