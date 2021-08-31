@@ -1,7 +1,19 @@
 # pow-demo
 Demo of sChain PoW script
 
-# Install and run
+# Run simple page demo
+
+1. Run command from project directory:
+
+   ```bash
+   python -m SimpleHTTPServer 8000
+   ```
+
+2. Run page in browser using `http://localhost:8000/demo.html`
+
+3. Deploy contract and receive 1 ETH on your metamask account
+
+# Install and run pow-test script
 
 1. Install dependencies:
 
@@ -15,7 +27,7 @@ Demo of sChain PoW script
     PRIVATE_KEY=... #Key from test account
     SKALE_ENDPOINT=... #Test sChain endpoint 
     ```
-3. Run `npm run pow-test.js`
+3. Run `node pow-test.js`
 
 # Benchmark
 
