@@ -1,5 +1,6 @@
 const BN = require("bn.js");
-const crypto = require("crypto")
+const crypto = require("crypto");
+const utils = require("web3-utils");
 
 const DIFFICULTY = new BN(1);
 
@@ -18,17 +19,17 @@ async function mineGasForTransaction(web3, tx) {
 }
 
 
-function mineFreeGas(gasAmount, address, nonce, web3) {
+function mineFreeGas(gasAmount, address, nonce) {
     console.log('Mining free gas: ', gasAmount);
-    let nonceHash = new BN(web3.utils.soliditySha3(nonce).slice(2), 16)
-    let addressHash = new BN(web3.utils.soliditySha3(address).slice(2), 16)
+    let nonceHash = new BN(utils.soliditySha3(nonce).slice(2), 16)
+    let addressHash = new BN(utils.soliditySha3(address).slice(2), 16)
     let nonceAddressXOR = nonceHash.xor(addressHash)
     let maxNumber = new BN(2).pow(new BN(256)).sub(new BN(1));
     let divConstant = maxNumber.div(DIFFICULTY);
     let candidate;
     while (true){
         candidate = new BN(crypto.randomBytes(32).toString('hex'), 16);
-        let candidateHash = new BN(web3.utils.soliditySha3(candidate).slice(2), 16);
+        let candidateHash = new BN(utils.soliditySha3(candidate).slice(2), 16);
         let resultHash = nonceAddressXOR.xor(candidateHash);
         let externalGas = divConstant.div(resultHash).toNumber();
         if (externalGas >= gasAmount) {
